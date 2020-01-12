@@ -1,0 +1,68 @@
+from .core import SessionRunner
+
+
+class Benchmark(SessionRunner):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def cpu_benchmark(self):
+        self.test_type = "cpu"
+        self.make_command()
+        return self.run_command()
+
+    def memory_benchmark(self):
+        self.test_type = "memory"
+        self.make_command()
+        return self.run_command()
+
+    def fileio_benchmark(self, cleanup=False):
+        self.test_type = "fileio"
+
+        if cleanup:
+            self.prepare_fileio = True
+            self.make_command(cmd="cleanup")
+            return self.run_command()
+
+        if self.prepare_fileio:
+            self.prepare_fileio = False
+            self.make_command(cmd="prepare")
+            self.run_command()
+
+        self.make_command()
+        fileio_output = self.run_command()
+
+        return fileio_output
+
+    def thread_benchmark(self, threads=128, timeout=10):
+        self.test_type = "threads"
+        self.make_command(threads=threads)
+        return self.run_command()
+
+    def oltp_benchmark(self, cleanup=False):
+        self.test_type = "oltp_read_write"
+
+        if cleanup:
+            self.make_command(cmd="cleanup")
+            return self.run_command()
+
+        self.make_command(cmd="prepare")
+        self.run_command()
+        self.make_command()
+        return self.run_command()
+
+    def run_all(self, iterations=1, cleanup=True):
+        benchmarks = ["cpu", "memory", "fileio", "thread", "oltp"]
+        out = {}
+        for i in range(iterations):
+            out[i + 1] = {}
+            for benchmark in benchmarks:
+                print(f"Running {benchmark} benchmark ({i + 1}/{iterations})")
+                method = getattr(self, f"{benchmark}_benchmark")
+                out[i + 1][benchmark] = method()
+
+        if cleanup:
+            self.fileio_benchmark(cleanup=True)
+            self.oltp_benchmark(cleanup=True)
+
+        return out
