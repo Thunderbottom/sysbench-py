@@ -14,6 +14,7 @@ class SessionRunner:
         if isinstance(self.hosts, dict):
             self.host_config = self.hosts
             self.hosts = self.hosts.keys()
+        self.command_output = None
         self.output = None
         self.prepare_fileio = True
         self.test_type = None
@@ -32,30 +33,30 @@ class SessionRunner:
 
         if hasattr(self, "command"):
             try:
-                self.output = self.client.run_command(self.command)
+                self.command_output = self.client.run_command(self.command)
             except UnknownHostException as e:
                 print(f"Unknown Host {e.host} - {e.args[2]}")
             except Exception as e:
                 print(e)
 
-        return self.get_output()
+        self.get_output()
 
     def get_output(self):
-        command_output = {}
-        if self.output:
-            for host, host_output in self.output.items():
-                command_output[host] = {
+        self.output = {}
+        if self.command_output:
+            for host, host_output in self.command_output.items():
+                self.output[host] = {
                     "command": self.command,
                     "stdout": list(host_output.stdout),
                     "stderr": "\n".join(list(host_output.stderr)),
                     "exit_code": host_output.exit_code
                 }
 
-        return command_output
-
-    def make_command(self, *args, cmd="run", threads=None):
+    def make_command(self, *args, cmd="run", run=True, threads=None):
         threads = f"--threads={threads or '$(nproc)'}"
         args = list(args)
         args.extend(get_params(self.config, self.test_type, cmd))
         self.command = " ".join(["sysbench", self.test_type, *args,
                                  threads, cmd])
+        if run:
+            self.run_command()
