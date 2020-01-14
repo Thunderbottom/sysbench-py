@@ -10,6 +10,7 @@ def main():
     config.read("config.ini")
     hosts = json.loads(config.get("system", "hosts"))
     benchmark = Benchmark(config, hosts)
+    benchmark.run_setup()
     output = benchmark.run_all()
 
     logfile = f"sysbench_{time.strftime('%Y%m%d-%H%M%S')}.log"

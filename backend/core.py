@@ -20,7 +20,7 @@ class SessionRunner:
         self.test_type = None
 
     def connect_ssh(self, retries=6, user="root"):
-        kwargs = {"num_retries": retries}
+        kwargs = {"num_retries": retries, "timeout": 10000}
         if hasattr(self, "host_config"):
             kwargs["host_config"] = self.host_config
         else:

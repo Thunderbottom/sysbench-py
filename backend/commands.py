@@ -58,3 +58,10 @@ class Benchmark(SessionRunner):
             self.oltp_benchmark(cleanup=True)
 
         return out
+
+    def run_setup(self):
+        mysql_cmd = f"CREATE DATABASE {self.config.get('oltp_read_write', 'mysql-db')}"
+        mysql_user = self.config.get("oltp_read_write", "mysql-user")
+        mysql_pass = self.config.get("oltp_read_write", "mysql-password")
+        self.command = f"mysql -u {mysql_user} -p{mysql_pass} -e {mysql_cmd}"
+        self.run_command()
