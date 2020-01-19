@@ -34,7 +34,7 @@ class Benchmark(SessionRunner):
         self.make_command(threads=threads)
 
     def oltp_benchmark(self, cleanup=False):
-        self.test_type = "oltp_read_write"
+        self.test_type = "/usr/share/doc/sysbench/tests/db/oltp.lua"
 
         if cleanup:
             self.make_command(cmd="cleanup")
@@ -60,8 +60,8 @@ class Benchmark(SessionRunner):
         return out
 
     def run_setup(self):
-        mysql_cmd = f"CREATE DATABASE {self.config.get('oltp_read_write', 'mysql-db')}"
-        mysql_user = self.config.get("oltp_read_write", "mysql-user")
-        mysql_pass = self.config.get("oltp_read_write", "mysql-password")
+        mysql_cmd = f"CREATE DATABASE {self.config.get('/usr/share/doc/sysbench/tests/db/oltp.lua', 'mysql-db')}"
+        mysql_user = self.config.get("/usr/share/doc/sysbench/tests/db/oltp.lua", "mysql-user")
+        mysql_pass = self.config.get("/usr/share/doc/sysbench/tests/db/oltp.lua", "mysql-password")
         self.command = f"mysql -u {mysql_user} -p{mysql_pass} -e {mysql_cmd}"
         self.run_command()

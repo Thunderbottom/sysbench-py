@@ -20,7 +20,7 @@ def get_params_mapping(test="cpu", cmd="all"):
         "memory": {
             "all": {
                 "memory-block-size": "1K",
-                "memory-total-size": "5G"
+                "memory-total-size": "64G"
             }
         },
         "fileio": {
@@ -31,24 +31,24 @@ def get_params_mapping(test="cpu", cmd="all"):
         },
         "threads": {
             "all": {
-                "time": "10"
+                "max-time": "10"
             }
         },
-        "oltp_read_write": {
+        "/usr/share/doc/sysbench/tests/db/oltp.lua": {
             "all": {
                 "mysql-db": "sysbench_test",
                 "mysql-user": "root",
                 "mysql-password": "password",
             },
             "prepare": {
-                "time": "60",
-                "table_size": "250000000",
-                "tables": "10"
+                "max-time": "60",
+                "oltp-table-size": "25000",
+                "oltp-tables-count": "100"
             },
             "run": {
-                "time": "60",
-                "table_size": "250000000",
-                "tables": "10",
+                "max-time": "60",
+                "oltp-table-size": "25000",
+                "oltp-tables-count": "100",
                 "max-requests": "0"
             }
         }

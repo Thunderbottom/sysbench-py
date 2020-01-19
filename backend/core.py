@@ -56,7 +56,7 @@ class SessionRunner:
         threads = f"--threads={threads or '$(nproc)'}"
         args = list(args)
         args.extend(get_params(self.config, self.test_type, cmd))
-        self.command = " ".join(["sysbench", self.test_type, *args,
+        self.command = " ".join(["sysbench", "--test=" + self.test_type, *args,
                                  threads, cmd])
         if run:
             self.run_command()
