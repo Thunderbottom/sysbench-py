@@ -42,13 +42,13 @@ def get_params_mapping(test="cpu", cmd="all"):
             },
             "prepare": {
                 "max-time": "60",
-                "oltp-table-size": "25000",
-                "oltp-tables-count": "100"
+                "oltp-table-size": "250000000",
+                "oltp-tables-count": "10"
             },
             "run": {
                 "max-time": "60",
-                "oltp-table-size": "25000",
-                "oltp-tables-count": "100",
+                "oltp-table-size": "250000000",
+                "oltp-tables-count": "10",
                 "max-requests": "0"
             }
         }
